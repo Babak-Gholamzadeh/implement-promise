@@ -2,6 +2,8 @@ function asyncController(borrowFunction) {
   var asyncHanlder = {};
   var _onSuccess = null;
   var _onError = null;
+  var value = null;
+  var state = 'PENDING';
 
   try {
     borrowFunction(resolve, reject);
