@@ -12,10 +12,17 @@ function asyncController(borrowFunction) {
   }
 
   function resolve(data) {
-    _onSuccess(data);
+    // _onSuccess(data);
+    value = data;
+    state = 'RESOLVED';
+    executeController();
   }
+
   function reject(err) {
-    _onError(err);
+    // _onError(err);
+    value = err;
+    state = 'REJECTED';
+    executeController();
   }
 
   function executeController() {
@@ -33,6 +40,7 @@ function asyncController(borrowFunction) {
   asyncHanlder.then = function (onSuccess, onError) {
     _onSuccess = onSuccess;
     _onError = onError;
+    executeController();
   }
 
   return asyncHanlder;
