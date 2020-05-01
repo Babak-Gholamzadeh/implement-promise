@@ -12,9 +12,13 @@ function asyncController(asyncFunction) {
       reject('something is wrong!!!');
     }
   });
-  
+
   function resolve(data) {
-    _callback(data);
+    // _callback(data);
+    _onSuccess(data);
+  }
+  function reject(err) {
+    _onError(err);
   }
 
   asyncHanlder.done = function (callback) {
