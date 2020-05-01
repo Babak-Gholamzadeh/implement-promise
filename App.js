@@ -1,17 +1,18 @@
 var fetchResult = require('./fetch.js');
 
-// fetchResult.done(function (data) {
-//   console.log(data);
-// });
+var asyncFetchData = require('./fetch.js');
 
-// 'then' method is just the same as 'done' method
-// but takes two callbacks instead of one
-fetchResult.then(
-  // if data be fetched successfuly, then 'onSuccess' would be called
+asyncFetchData.then(
   onSuccess,
-  // if any error occurs, then 'onError' would be called
   onError
 );
+
+setTimeout(function() {
+  asyncFetchData.then(
+    onSuccess,
+    onError
+  );
+}, 60_000 /* even after 1 minute */);
 
 function onSuccess(data) {
   console.log('Result:', data); // output> Result: data is here!!!
