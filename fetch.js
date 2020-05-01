@@ -2,7 +2,9 @@ var fetchData = require('./helper/fetch-data');
 
 function asyncController(asyncFunction) {
   var asyncHanlder = {};
-  var _callback = null;
+  // var _callback = null;
+  var _onSuccess = null;
+  var _onError = null;
 
   asyncFunction(function (data) {
     // resolve(data);
@@ -21,8 +23,12 @@ function asyncController(asyncFunction) {
     _onError(err);
   }
 
-  asyncHanlder.done = function (callback) {
-    _callback = callback;
+  // asyncHanlder.done = function (callback) {
+  //   _callback = callback;
+  // }
+  asyncHanlder.then = function (onSuccess, onError) {
+    _onSuccess = onSuccess;
+    _onError = onError;
   }
 
   return asyncHanlder;
