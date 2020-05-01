@@ -1,7 +1,9 @@
 var fetchResult = require('./fetch.js');
 
-console.log(fetchResult); // output> undefined;
+// setTimeout(function() {
+//   console.log(fetchResult);
+// }, 1000);
 
-setTimeout(function() {
-  console.log(fetchResult); // output> undefined;
-}, 1000); // assume fetchResult takes data in less than 1 sec
+fetchResult.done = function(data) {
+  console.log(data); // output> data is here!!!
+};
