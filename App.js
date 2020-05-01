@@ -12,3 +12,10 @@ fetchResult.then(
   // if any error occurs, then 'onError' would be called
   onError
 );
+
+function onSuccess(data) {
+  console.log('Result:', data); // output> Result: data is here!!!
+}
+function onError(err) {
+  console.log('Error:', err); // output> Error: something is wrong!!!
+}
