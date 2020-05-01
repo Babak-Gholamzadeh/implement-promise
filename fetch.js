@@ -5,9 +5,14 @@ function asyncController(asyncFunction) {
   var _callback = null;
 
   asyncFunction(function (data) {
-    resolve(data);
+    // resolve(data);
+    if (data) {
+      resolve(data);
+    } else {
+      reject('something is wrong!!!');
+    }
   });
-
+  
   function resolve(data) {
     _callback(data);
   }
