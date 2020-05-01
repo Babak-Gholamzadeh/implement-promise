@@ -1,19 +1,23 @@
 var fetchData = require('./helper/fetch-data');
 
-var fetchResult = {
-  // data: null,
-  resolve: function(data) {
-    this.callback(data);
-  },
-  done: function(callback) {
-    // callback(this.data);
-    this.callback = callback;
+function asyncController(asyncFunction) {
+  var asyncHanlder = {};
+  var _callback = null;
+
+  asyncFunction(function (data) {
+    resolve(data);
+  });
+
+  function resolve(data) {
+    _callback(data);
   }
-};
 
-fetchData(function (data) {
-  // fetchResult.data = data;
-  fetchResult.resolve(data);
-});
+  asyncHanlder.done = function (callback) {
+    _callback = callback;
+  }
 
-module.exports = fetchResult;
+  return asyncHanlder;
+}
+
+var asyncHanlder = asyncController(fetchData);
+module.exports = asyncHanlder;
