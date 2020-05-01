@@ -1,11 +1,10 @@
 var fetchData = require('./helper/fetch-data');
 
-// var fetchResult = undefined;
 var fetchResult = {};
 
 fetchData(function (data) {
-  // fetchResult = data;
-  fetchResult.data = data;
+  // fetchResult.data = data;
+  fetchResult.done(data);
 });
 
 module.exports = fetchResult;
