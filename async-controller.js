@@ -100,7 +100,10 @@ function asyncController(borrowFunction) {
       executeController();
     }
 
-    return asyncHanlder;
+    return asyncController(borrowFunction);
   }
 
-  module.exports = asyncController;
+  return asyncHanlder;
+}
+
+module.exports = asyncController;
