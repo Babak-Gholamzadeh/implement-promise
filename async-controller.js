@@ -30,20 +30,30 @@ function asyncController(borrowFunction) {
 
   function executeController() {
 
+    if(state === 'PENDING') {
+      return;
+    }
+  
     setTimeout(function () {
-
-      if (state === 'RESOLVED') {
-        if (_onSuccess) {
-          _onSuccess(value);
+      // if (state === 'RESOLVED') {
+      //     _onSuccess(value);
+      // } else {
+      //     _onError(value);
+      // }
+  
+      onThenHanlers.forEach(function (hanlder) {
+  
+        if (state === 'RESOLVED') {
+          hanlder.onSuccess(value);
+        } else {
+          hanlder.onError(value);
         }
-      } else if (state === 'REJECTED') {
-        if (_onError) {
-          _onError(value);
-        }
-      }
-
+  
+      });
+      onThenHanlers = [];
+  
     }, 0);
-
+    
   }
 
   function isThenable(value) {
