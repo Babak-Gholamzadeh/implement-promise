@@ -114,6 +114,10 @@ function asyncController(borrowFunction) {
     return asyncController(borrowFunction);
   }
 
+  asyncHanlder.catch = function (onError) {
+    return asyncHanlder.then(null, onError);
+  }
+
   return asyncHanlder;
 }
 
