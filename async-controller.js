@@ -1,5 +1,27 @@
 const [ PENDING, RESOLVED, REJECTED ] = [0, 1, 2];
 
+function isNotNull(value) {
+  return value !== null;
+}
+function isFunction(value) {
+  return typeof value === 'function';
+}
+function isObject(value) {
+  // Check the value type is 'object', 'function', or 'array'
+  return (
+    typeof value === 'object' ||
+    isFunction(value)
+  );
+}
+function isThenable(value) {
+  return (
+    isNotNull(value) &&
+    isObject(value) &&
+    isFunction(value.then)
+  );
+}
+
+
 function asyncController(borrowFunction) {
   var asyncHanlder = {};
   var onThenHanlers = [];
@@ -38,12 +60,7 @@ function asyncController(borrowFunction) {
     }
   
     setTimeout(function () {
-      // if (state === RESOLVED) {
-      //     _onSuccess(value);
-      // } else {
-      //     _onError(value);
-      // }
-  
+
       onThenHanlers.forEach(function (hanlder) {
   
         if (state === RESOLVED) {
@@ -57,21 +74,6 @@ function asyncController(borrowFunction) {
   
     }, 0);
     
-  }
-
-  function isThenable(value) {
-    return (
-
-      value !== null &&
-
-      (
-        typeof value === 'object' ||
-        typeof value === 'function'
-      ) &&
-
-      typeof value.then === 'function'
-
-    );
   }
 
   asyncHanlder.then = function (onSuccess, onError) {
