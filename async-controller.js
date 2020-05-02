@@ -38,7 +38,9 @@ function asyncController(borrowFunction) {
   }
 
   asyncHanlder.then = function (onSuccess, onError) {
-    _onSuccess = onSuccess;
+    _onSuccess = function(result) {
+      var returnedValue = onSuccess(result);
+    }
     _onError = onError;
     executeController();
   
