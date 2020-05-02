@@ -31,7 +31,7 @@ function asyncController(borrowFunction) {
   function executeController() {
 
     setTimeout(function () {
-  
+
       if (state === 'RESOLVED') {
         if (_onSuccess) {
           _onSuccess(value);
@@ -41,9 +41,9 @@ function asyncController(borrowFunction) {
           _onError(value);
         }
       }
-  
+
     }, 0);
-  
+
   }
 
   function isThenable(value) {
@@ -65,39 +65,42 @@ function asyncController(borrowFunction) {
 
     function borrowFunction(resolve, reject) {
 
-      _onSuccess = function (result) {
-        if (!onSuccess) {
-          resolve(result);
-        } else {
-          try {
-            var returnedValue = onSuccess(result);
-            resolve(returnedValue);
-          } catch (err) {
+      var hanlder = {
+
+        onSuccess: function (result) {
+          if (!onSuccess) {
+            resolve(result);
+          } else {
+            try {
+              var returnedValue = onSuccess(result);
+              resolve(returnedValue);
+            } catch (err) {
+              reject(err);
+            }
+          }
+        },
+
+        onError: function (err) {
+          if (!onError) {
             reject(err);
+          } else {
+            try {
+              var returnedValue = onError(err);
+              resolve(returnedValue);
+            } catch (err) {
+              reject(err);
+            }
           }
         }
+
       };
 
-      _onError = function (err) {
-        if (!onError) {
-          reject(err);
-        } else {
-          try {
-            var returnedValue = onError(err);
-            resolve(returnedValue);
-          } catch (err) {
-            reject(err);
-          }
-        }
-      };
+      onThenHanlers.push(hanlder);
 
       executeController();
     }
 
-    return asyncController(borrowFunction);
+    return asyncHanlder;
   }
 
-  return asyncHanlder;
-}
-
-module.exports = asyncController;
+  module.exports = asyncController;
