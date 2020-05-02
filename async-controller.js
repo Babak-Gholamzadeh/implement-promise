@@ -130,4 +130,13 @@ asyncController.resolve = function (value) {
   return asyncController(borrowResolve);
 }
 
+asyncController.reject = function (err) {
+
+  function borrowReject(resolve, reject) {
+    reject(err);
+  }
+
+  return asyncController(borrowReject);
+}
+
 module.exports = asyncController;
