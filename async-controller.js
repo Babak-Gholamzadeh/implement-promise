@@ -48,8 +48,14 @@ function asyncController(borrowFunction) {
         if(!onSuccess) {
           resolve(result);
         } else {
-          var returnedValue = onSuccess(result);
-          resolve(returnedValue);
+    
+          try {
+            var returnedValue = onSuccess(result);
+            resolve(returnedValue);
+          } catch(err) {
+            reject(err);
+          }
+    
         }
     
       }
