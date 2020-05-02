@@ -12,14 +12,21 @@ function asyncController(borrowFunction) {
   }
 
   function resolve(data) {
-    // _onSuccess(data);
+    if (isThenable(data)) {
+      return data.then(resolve, reject);
+    }
+  
     value = data;
     state = 'RESOLVED';
     executeController();
   }
-
+  
+  
   function reject(err) {
-    // _onError(err);
+    if (isThenable(err)) {
+      return err.then(resolve, reject);
+    }
+  
     value = err;
     state = 'REJECTED';
     executeController();
