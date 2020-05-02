@@ -38,28 +38,36 @@ function asyncController(borrowFunction) {
   }
 
   asyncHanlder.then = function (onSuccess, onError) {
-    _onError = onError;
-    executeController();
-  
+
     function borrowFunction(resolve, reject) {
 
-      _onSuccess = function(result) {
-    
-        if(!onSuccess) {
+      _onSuccess = function (result) {
+        if (!onSuccess) {
           resolve(result);
         } else {
-    
           try {
             var returnedValue = onSuccess(result);
             resolve(returnedValue);
-          } catch(err) {
+          } catch (err) {
             reject(err);
           }
-    
         }
-    
-      }
-    
+      };
+  
+      _onError = function (err) {
+        if (!onError) {
+          reject(err);
+        } else {
+          try {
+            var returnedValue = onError(err);
+            resolve(returnedValue);
+          } catch (err) {
+            reject(err);
+          }
+        }
+      };
+  
+      executeController();
     }
 
     return asyncController(borrowFunction);
