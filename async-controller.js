@@ -5,40 +5,36 @@ function asyncController(borrowFunction) {
   var value = null;
   var state = 'PENDING';
 
+  var resolve = applyNewState('RESOLVED');
+  var reject = applyNewState('REJECTED');
+
+  function applyNewState(newState) {
+    return function (newValue) {
+
+      if (isThenable(newValue)) {
+        return newValue.then(resolve, reject);
+      }
+
+      value = newValue;
+      state = newState;
+      executeController();
+
+    }
+  }
+
   try {
     borrowFunction(resolve, reject);
   } catch (err) {
     reject(err);
   }
 
-  function resolve(data) {
-    if (isThenable(data)) {
-      return data.then(resolve, reject);
-    }
-  
-    value = data;
-    state = 'RESOLVED';
-    executeController();
-  }
-  
-  
-  function reject(err) {
-    if (isThenable(err)) {
-      return err.then(resolve, reject);
-    }
-  
-    value = err;
-    state = 'REJECTED';
-    executeController();
-  }
-
   function executeController() {
-    if(state === 'RESOLVED') {
-      if(_onSuccess) {
+    if (state === 'RESOLVED') {
+      if (_onSuccess) {
         _onSuccess(value);
       }
     } else if (state === 'REJECTED') {
-      if(_onError) {
+      if (_onError) {
         _onError(value);
       }
     }
@@ -46,16 +42,16 @@ function asyncController(borrowFunction) {
 
   function isThenable(value) {
     return (
-  
+
       value !== null &&
-  
+
       (
         typeof value === 'object' ||
         typeof value === 'function'
       ) &&
-  
+
       typeof value.then === 'function'
-  
+
     );
   }
 
@@ -75,7 +71,7 @@ function asyncController(borrowFunction) {
           }
         }
       };
-  
+
       _onError = function (err) {
         if (!onError) {
           reject(err);
@@ -88,7 +84,7 @@ function asyncController(borrowFunction) {
           }
         }
       };
-  
+
       executeController();
     }
 
