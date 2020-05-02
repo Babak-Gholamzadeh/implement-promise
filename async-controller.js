@@ -1,11 +1,13 @@
+const [ PENDING, RESOLVED, REJECTED ] = [0, 1, 2];
+
 function asyncController(borrowFunction) {
   var asyncHanlder = {};
   var onThenHanlers = [];
   var value = null;
-  var state = 'PENDING';
+  var state = PENDING;
 
-  var resolve = applyNewState('RESOLVED');
-  var reject = applyNewState('REJECTED');
+  var resolve = applyNewState(RESOLVED);
+  var reject = applyNewState(REJECTED);
 
   function applyNewState(newState) {
     return function (newValue) {
@@ -14,7 +16,7 @@ function asyncController(borrowFunction) {
         return newValue.then(resolve, reject);
       }
   
-      if (state === 'PENDING') {
+      if (state === PENDING) {
         value = newValue;
         state = newState;
         executeController();
@@ -31,12 +33,12 @@ function asyncController(borrowFunction) {
 
   function executeController() {
 
-    if(state === 'PENDING') {
+    if(state === PENDING) {
       return;
     }
   
     setTimeout(function () {
-      // if (state === 'RESOLVED') {
+      // if (state === RESOLVED) {
       //     _onSuccess(value);
       // } else {
       //     _onError(value);
@@ -44,7 +46,7 @@ function asyncController(borrowFunction) {
   
       onThenHanlers.forEach(function (hanlder) {
   
-        if (state === 'RESOLVED') {
+        if (state === RESOLVED) {
           hanlder.onSuccess(value);
         } else {
           hanlder.onError(value);
