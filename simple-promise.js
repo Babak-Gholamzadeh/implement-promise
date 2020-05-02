@@ -21,8 +21,8 @@ function isThenable(value) {
   );
 }
 
-function asyncController(borrowFunction) {
-  var asyncHanlder = {};
+function simplePromise(borrowFunction) {
+  var promiseHanlder = {};
   var onThenHanlers = [];
   var value = null;
   var state = PENDING;
@@ -64,7 +64,7 @@ function asyncController(borrowFunction) {
     }, 0);
   }
 
-  asyncHanlder.then = function (onSuccess, onError) {
+  promiseHanlder.then = function (onSuccess, onError) {
     function borrowFunction(resolve, reject) {
       var hanlder = {
         onSuccess: function (result) {
@@ -93,28 +93,28 @@ function asyncController(borrowFunction) {
       onThenHanlers.push(hanlder);
       executeController();
     }
-    return asyncController(borrowFunction);
+    return simplePromise(borrowFunction);
   }
 
-  asyncHanlder.catch = function (onError) {
-    return asyncHanlder.then(null, onError);
+  promiseHanlder.catch = function (onError) {
+    return promiseHanlder.then(null, onError);
   }
 
-  return asyncHanlder;
+  return promiseHanlder;
 }
 
-asyncController.resolve = function (value) {
+simplePromise.resolve = function (value) {
   function borrowResolve(resolve) {
     resolve(value);
   }
-  return asyncController(borrowResolve);
+  return simplePromise(borrowResolve);
 }
 
-asyncController.reject = function (err) {
+simplePromise.reject = function (err) {
   function borrowReject(resolve, reject) {
     reject(err);
   }
-  return asyncController(borrowReject);
+  return simplePromise(borrowReject);
 }
 
-module.exports = asyncController;
+module.exports = simplePromise;

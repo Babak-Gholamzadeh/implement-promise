@@ -1,6 +1,6 @@
 var fetchData = require('./helper/fetch-data');
 
-var asyncController = require('./async-controller');
+var simplePromise = require('./simple-promise');
 
 function borrowFunction(resolve, reject) {
 
@@ -14,5 +14,5 @@ function borrowFunction(resolve, reject) {
 
 }
 
-var asyncFetchData = asyncController(borrowFunction);
+var asyncFetchData = simplePromise(borrowFunction);
 module.exports = asyncFetchData;
