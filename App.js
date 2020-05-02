@@ -1,3 +1,4 @@
+var reverse = require('./helper/reverse');
 var asyncFetchData = require('./fetch.js');
 
 asyncFetchData
