@@ -1,4 +1,4 @@
-const [ PENDING, RESOLVED, REJECTED ] = [0, 1, 2];
+const [PENDING, RESOLVED, REJECTED] = [0, 1, 2];
 
 function isNotNull(value) {
   return value !== null;
@@ -21,31 +21,27 @@ function isThenable(value) {
   );
 }
 
-
 function asyncController(borrowFunction) {
   var asyncHanlder = {};
   var onThenHanlers = [];
   var value = null;
   var state = PENDING;
 
-  var resolve = applyNewState(RESOLVED);
-  var reject = applyNewState(REJECTED);
-
   function applyNewState(newState) {
     return function (newValue) {
-  
       if (isThenable(newValue)) {
         return newValue.then(resolve, reject);
       }
-  
       if (state === PENDING) {
         value = newValue;
         state = newState;
         executeController();
       }
-  
     }
   }
+
+  var resolve = applyNewState(RESOLVED);
+  var reject = applyNewState(REJECTED);
 
   try {
     borrowFunction(resolve, reject);
@@ -54,67 +50,49 @@ function asyncController(borrowFunction) {
   }
 
   function executeController() {
-
-    if(state === PENDING) {
+    if (state === PENDING) {
       return;
     }
-  
     setTimeout(function () {
-
       onThenHanlers.forEach(function (hanlder) {
-  
         if (state === RESOLVED) {
-          hanlder.onSuccess(value);
-        } else {
-          hanlder.onError(value);
+          return hanlder.onSuccess(value);
         }
-  
+        hanlder.onError(value);
       });
       onThenHanlers = [];
-  
     }, 0);
-    
   }
 
   asyncHanlder.then = function (onSuccess, onError) {
-
     function borrowFunction(resolve, reject) {
-
       var hanlder = {
-
         onSuccess: function (result) {
           if (!onSuccess) {
-            resolve(result);
-          } else {
-            try {
-              var returnedValue = onSuccess(result);
-              resolve(returnedValue);
-            } catch (err) {
-              reject(err);
-            }
+            return resolve(result);
+          }
+          try {
+            var returnedValue = onSuccess(result);
+            resolve(returnedValue);
+          } catch (err) {
+            reject(err);
           }
         },
-
         onError: function (err) {
           if (!onError) {
+            return reject(err);
+          }
+          try {
+            var returnedValue = onError(err);
+            resolve(returnedValue);
+          } catch (err) {
             reject(err);
-          } else {
-            try {
-              var returnedValue = onError(err);
-              resolve(returnedValue);
-            } catch (err) {
-              reject(err);
-            }
           }
         }
-
       };
-
       onThenHanlers.push(hanlder);
-
       executeController();
     }
-
     return asyncController(borrowFunction);
   }
 
@@ -126,20 +104,16 @@ function asyncController(borrowFunction) {
 }
 
 asyncController.resolve = function (value) {
-
   function borrowResolve(resolve) {
     resolve(value);
   }
-
   return asyncController(borrowResolve);
 }
 
 asyncController.reject = function (err) {
-
   function borrowReject(resolve, reject) {
     reject(err);
   }
-
   return asyncController(borrowReject);
 }
 
