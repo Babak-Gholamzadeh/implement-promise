@@ -37,6 +37,21 @@ function asyncController(borrowFunction) {
     }
   }
 
+  function isThenable(value) {
+    return (
+  
+      value !== null &&
+  
+      (
+        typeof value === 'object' ||
+        typeof value === 'function'
+      ) &&
+  
+      typeof value.then === 'function'
+  
+    );
+  }
+
   asyncHanlder.then = function (onSuccess, onError) {
 
     function borrowFunction(resolve, reject) {
