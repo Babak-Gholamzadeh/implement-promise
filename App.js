@@ -1,17 +1,18 @@
-var asyncFetchData = require('./fetch.js');
-asyncFetchData
-  .then(function (result) {
-    console.log(result); // output> data is here!
-    throw 'something is wrong!';
-    return result + ' hooray!';
+var asyncController = require('./async-controller');
+var result = asyncController.resolve(5);
+result
+  .then(function (value) {
+    console.log(value); // output> 5
+    return value + 1;
   })
-  .then(function (result) {
-    console.log(result);
+  .then(function (value) {
+    console.log(value); // output> 6
+    return asyncController.reject('something is wrong!');
+  })
+  .then(function(value) {
+    console.log(value);
+    return value + 1;
   })
   .catch(function(err) {
     console.log(err); // output> something is wrong!
-    return 'everything is find now!';
-  })
-  .then(function(result) {
-    console.log(result); // output> everything is find now!
   });
