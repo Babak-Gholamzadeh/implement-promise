@@ -121,4 +121,13 @@ function asyncController(borrowFunction) {
   return asyncHanlder;
 }
 
+asyncController.resolve = function (value) {
+
+  function borrowResolve(resolve) {
+    resolve(value);
+  }
+
+  return asyncController(borrowResolve);
+}
+
 module.exports = asyncController;
