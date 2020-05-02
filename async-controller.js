@@ -38,16 +38,16 @@ function asyncController(borrowFunction) {
   }
 
   asyncHanlder.then = function (onSuccess, onError) {
-    _onSuccess = function(result) {
-      var returnedValue = onSuccess(result);
-    }
     _onError = onError;
     executeController();
   
     function borrowFunction(resolve, reject) {
-      // The party is here!
+      _onSuccess = function(result) {
+        var returnedValue = onSuccess(result);
+        resolve(returnedValue);
+      }
     }
-  
+
     return asyncController(borrowFunction);
   }
 
