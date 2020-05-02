@@ -29,15 +29,21 @@ function asyncController(borrowFunction) {
   }
 
   function executeController() {
-    if (state === 'RESOLVED') {
-      if (_onSuccess) {
-        _onSuccess(value);
+
+    setTimeout(function () {
+  
+      if (state === 'RESOLVED') {
+        if (_onSuccess) {
+          _onSuccess(value);
+        }
+      } else if (state === 'REJECTED') {
+        if (_onError) {
+          _onError(value);
+        }
       }
-    } else if (state === 'REJECTED') {
-      if (_onError) {
-        _onError(value);
-      }
-    }
+  
+    }, 0);
+  
   }
 
   function isThenable(value) {
