@@ -41,6 +41,12 @@ function asyncController(borrowFunction) {
     _onSuccess = onSuccess;
     _onError = onError;
     executeController();
+  
+    function borrowFunction(resolve, reject) {
+      // The party is here!
+    }
+  
+    return asyncController(borrowFunction);
   }
 
   return asyncHanlder;
