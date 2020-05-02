@@ -10,15 +10,17 @@ function asyncController(borrowFunction) {
 
   function applyNewState(newState) {
     return function (newValue) {
-
+  
       if (isThenable(newValue)) {
         return newValue.then(resolve, reject);
       }
-
-      value = newValue;
-      state = newState;
-      executeController();
-
+  
+      if (state === 'PENDING') {
+        value = newValue;
+        state = newState;
+        executeController();
+      }
+  
     }
   }
 
